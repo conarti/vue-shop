@@ -1,0 +1,164 @@
+@import '~normalize.css'
+@import url('https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined')
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap')
+
+/* theme color */
+$--color-primary: #1890ff
+$--color-success: #13ce66
+$--color-warning: #ffba00
+$--color-danger: #ff4949
+// $--color-info: #1E1E1E
+
+$--button-font-weight: 400
+
+// $--color-text-regular: #1f2d3d
+
+$--border-color-light: #dfe4ed
+$--border-color-lighter: #e6ebf5
+
+$--table-border: 1px solid #dfe6ec
+
+/* icon font path, required */
+$--font-path: '~element-plus/lib/theme-chalk/fonts'
+
+@import './theme-vars'
+
+@import '../../node_modules/element-plus/packages/theme-chalk/src/index'
+
+//$primary-color: #3051ff
+//$bg-color: #fafbfd
+
+body
+  background: var(--color__body)
+  color: var(--color__text)
+  transition: color .25s, background-color .25s
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif
+
+.container
+  height: 100vh
+  margin: 0 auto
+  max-width: 1000px
+  position: relative
+
+.container.with-nav
+  margin-top: 70px
+
+.card
+  overflow: hidden
+  padding: 1rem
+  margin-bottom: 1rem
+  border-radius: 5px
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+  background: var(--color__body--accent)
+
+.vertical-center
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+.mb-10
+  margin-bottom: 10px
+.mb-25
+  margin-bottom: 25px
+
+.navbar
+  display: flex
+  padding: 0 2rem
+  justify-content: space-between
+  align-items: center
+  position: fixed
+  z-index: 20
+  top: 0
+  left: 0
+  right: 0
+  height: 56px
+  background-color: var(--color__body--accent)
+  box-sizing: border-box
+  border-bottom: 1px solid #eee
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+  //box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+
+.navbar h3
+  font-weight: 500
+  font-size: 20px
+
+.navbar-menu
+  list-style: none
+  display: flex
+
+.navbar-menu li
+  margin-right: 2rem
+  display: flex
+  align-items: center
+
+.navbar-menu li a
+  //color: var(--color__text)
+  text-decoration: none
+  font-size: 14px
+  color: var(--color__nav)
+  font-weight: 500
+  border-bottom: 1px solid transparent
+  transition: border-bottom-color .25s, color .25s
+
+.navbar-menu li span
+  margin-left: .5rem
+
+.navbar-menu li a:hover, .navbar-menu li a.active
+  border-bottom: 1px solid var(--color__primary)
+  color: var(--color__primary)
+
+.text-center
+  text-align: center
+
+.text-right
+  text-align: end
+
+.flex-end
+  display: flex
+  justify-content: flex-end
+
+.table
+  width: 100%
+  border-collapse: collapse
+
+.table th
+  padding: .5rem 1rem
+
+.table td
+  padding: .5rem 1rem
+
+.table thead th:first-child
+  text-align: start
+
+.table thead th
+  text-align: center
+
+.table thead th:last-child
+  text-align: end
+
+.table tbody td:first-child
+  text-align: start
+
+.table tbody td
+  text-align: center
+
+.table tbody td:last-child
+  text-align: end
+
+.table tbody tr
+  transition: background-color .25s
+
+.table tbody tr:hover
+  background: var(--color__body--muted)
+
+.stepper
+  width: 100%
+
+// for plugin
+//.el-card, .el-table, .el-table tr, .el-table th
+//  background: var(--color__body--accent)
+
+.card-title
+  font-size: 20px
+  font-weight: 500

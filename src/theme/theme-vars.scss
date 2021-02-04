@@ -1,0 +1,56 @@
+:root {
+  $color__primary: #409EFF;
+  --color__primary: #{$color__primary};
+  --color__primary--muted: #{scale-color(
+      $color__primary,
+      $lightness: -70%,
+      $alpha: -75%
+    )};
+  --color__primary--lighter: #{scale-color($color__primary, $lightness: 95%)};
+
+  --color__nav: #606266;
+
+  $color__body: #f2f2f2;
+  --color__body: #{$color__body};
+  --color__body--muted: #{scale-color(
+      $color__body,
+      $lightness: -5%,
+      $alpha: -60%
+    )};
+  --color__body--accent: #ffffff;
+  --color__body--accent-lighten: #{scale-color(
+      $color__body,
+      $lightness: 20%,
+    )};
+
+  $color__text: #000;
+  --color__text: #{$color__text};
+
+  @media screen {
+    &[data-theme='dark'] {
+      $color__primary: #409EFF;
+      --color__primary: #{$color__primary};
+      --color__primary--muted: #{scale-color(
+          $color__primary,
+          $lightness: -70%,
+          $alpha: -75%
+        )};
+      --color__primary--lighter: #{scale-color(
+          $color__primary,
+          $lightness: -95%
+        )};
+
+      $color__body: #121212;
+      --color__body: #{$color__body};
+      --color__body--muted: #{scale-color(
+          #272727,
+          $lightness: -25%
+        )};
+      --color__body--accent: #272727;
+      --color__body--accent-lighten: lighten(#272727, 100);
+
+      $color__text: #f2f2f2;
+      --color__text: #{$color__text};
+    }
+  }
+}
