@@ -42,10 +42,23 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
+    redirect: '/admin/products',
     meta: {
       layout: 'main',
       auth: true
     },
+    children: [
+      {
+        path: 'products',
+        name: 'Products',
+        component: () => import(/* webpackChunkName: "products" */ '@/views/admin/Products')
+      },
+      {
+        path: 'categories',
+        name: 'Categories',
+        component: () => import(/* webpackChunkName: "categories" */ '@/views/admin/Categories')
+      }
+    ],
     component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
   }
 ]

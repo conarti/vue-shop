@@ -33,7 +33,7 @@ export default {
         commit('setToken', data.idToken)
       } catch (e) {
         ElNotification.error({
-          title: 'Ошибка',
+          title: 'Ошибка авторизации',
           message: error(e.response.data.error.message),
           showClose: false
         })

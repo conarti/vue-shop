@@ -1,12 +1,9 @@
 <template>
-  <el-card>
-    <el-empty description="Здесь пока ничего нет"></el-empty>
-  </el-card>
+  <router-view></router-view>
 </template>
 
 <script>
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 
 export default {

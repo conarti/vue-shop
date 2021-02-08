@@ -5,27 +5,27 @@ import { error } from '@/utils/error'
 export default {
   namespaced: true,
   state: {
-    products: [],
+    categories: [],
     loading: false
   },
   mutations: {
-    setProducts(state, payload) {
-      state.products = payload
+    setCategories(state, payload) {
+      state.categories = payload
     },
     setLoadStatus(state, status) {
       state.loading = status
     }
   },
   actions: {
-    async getProductsFromServer({commit}) {
+    async getCategoriesFromServer({commit}) {
       try {
         commit('setLoadStatus', true)
-        const { data } = await axiosProducts.get('/products')
-        commit('setProducts', data)
+        const { data } = await axiosProducts.get('/categories')
+        commit('setCategories', data)
         commit('setLoadStatus', false)
       } catch (e) {
         ElNotification.error({
-          title: 'Ошибка при получении данных с сервера (продукты)',
+          title: 'Ошибка при получении данных с сервера (категории)',
           message: error(e),
           showClose: false
         })
@@ -33,7 +33,7 @@ export default {
     }
   },
   getters: {
-    products: state => state.products,
+    categories: state => state.categories,
     isLoading: state => state.loading
   }
 }
