@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
 import Shop from '@/views/Shop'
 
-const routes = [
+let routes
+routes = [
   {
     path: '/',
     name: 'Shop',
@@ -47,6 +48,7 @@ const routes = [
       layout: 'main',
       auth: true
     },
+    component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin'),
     children: [
       {
         path: 'products',
@@ -58,8 +60,12 @@ const routes = [
         name: 'Categories',
         component: () => import(/* webpackChunkName: "categories" */ '@/views/admin/Categories')
       }
-    ],
-    component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin')
+    ]
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: '404',
+    redirect: '/'
   }
 ]
 

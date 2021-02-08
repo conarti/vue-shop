@@ -1,5 +1,5 @@
 import axiosProducts from '@/axios/axios.products'
-import { ElNotification } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 import { error } from '@/utils/error'
 
 export default {
@@ -11,6 +11,9 @@ export default {
   mutations: {
     setProducts(state, payload) {
       state.products = payload
+    },
+    addProduct(state, payload) {
+      state.products.push(payload)
     },
     setLoadStatus(state, status) {
       state.loading = status
@@ -29,6 +32,23 @@ export default {
           message: error(e),
           showClose: false
         })
+      }
+    },
+    async addProduct({commit}, payload) {
+      try {
+        commit('setLoadStatus', true)
+        const { data } = await axiosProducts.post('/products', payload)
+        commit('addProduct', payload)
+        ElMessage({
+          message: 'Позиция успешно добавлена!',
+          type: 'success'
+        });
+        commit('setLoadStatus', false)
+      } catch (e) {
+        ElMessage({
+          message: error(e),
+          type: 'error'
+        });
       }
     }
   },
