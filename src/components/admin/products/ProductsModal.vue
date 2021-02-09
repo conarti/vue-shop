@@ -2,24 +2,23 @@
   <el-dialog
     title="Добавление продукта"
     v-model="active"
-    width="30%"
+    width="40%"
     top="20px"
+    destroy-on-close
     center>
-
     <el-form
       :model="form"
       ref="modalForm"
       :rules="rules"
-      status-icon
-      label-width="50px"
-      label-position="top">
+      label-width="120px"
+      size="small"
+      label-position="left">
       <el-form-item
         label="Название"
         prop="title">
         <el-input
           v-model="form.title"
           placeholder="Введите название"
-          prefix-icon="el-icon-user-solid"
         ></el-input>
       </el-form-item>
       <el-form-item
@@ -28,39 +27,34 @@
         <el-input
           v-model="form.img"
           placeholder="Введите ссылку на изображение"
-          prefix-icon="el-icon-user-solid"
         ></el-input>
       </el-form-item>
       <el-form-item
         label="Категория"
         prop="category">
-        <el-input
-          v-model="form.category"
-          placeholder="Выберите категорию"
-          prefix-icon="el-icon-user-solid"
-        ></el-input>
+        <el-select v-model="form.category" placeholder="Выберите категорию" filterable>
+          <el-option v-for="item in categories" :label="item.title" :value="item.type"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item
         label="Цена"
         prop="price">
         <el-input
-          v-model="form.price"
+          v-model.number="form.price"
           placeholder="Введите стоимость"
-          prefix-icon="el-icon-user-solid"
         ></el-input>
       </el-form-item>
       <el-form-item
         label="Количество"
         prop="count">
         <el-input
-          v-model="form.count"
+          v-model.number="form.count"
           placeholder="Введите количество"
-          prefix-icon="el-icon-user-solid"
         ></el-input>
       </el-form-item>
 
       <el-form-item label-width="auto">
-        <el-row type="flex" justify="center">
+        <el-row type="flex" justify="end">
           <el-col :span="0">
             <el-button
               style="width: 100%"
@@ -76,15 +70,16 @@
 </template>
 
 <script>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useStore } from 'vuex'
-import { ElMessage } from 'element-plus';
 
 export default {
   name: 'ProductsCreateModal',
   emits: ['create'],
   props: ['active'],
   setup(_, { emit }) {
+    const store = useStore()
+
     const modalForm = ref(null)
 
     const form = reactive({
@@ -109,15 +104,13 @@ export default {
       ],
       price: [
         { required: true, message: 'Пожалуйста, введите стоимость', trigger: 'blur' },
-        { min: 3, message: 'Здесь не может быть меньше 3 символов', trigger: 'blur' },
+        { type: 'number', message: 'Введите число', trigger: 'blur' },
       ],
       count: [
         { required: true, message: 'Пожалуйста, введите количество', trigger: 'blur' },
-        { min: 3, message: 'Здесь не может быть меньше 3 символов', trigger: 'blur' },
+        { type: 'number', message: 'Введите число', trigger: 'blur' },
       ]
     }
-
-    const store = useStore()
 
     const isLoading = computed(() => store.getters['products/loading'])
 
@@ -127,7 +120,7 @@ export default {
           try {
             await store.dispatch('products/addProduct', { ...form, id: Date.now().toString() })
             emit('create')
-            form.title = form.img = form.category = form.price =form.count = ''
+            form.title = form.img = form.category = form.price = form.count = ''
           } catch (e) {}
         } else {
           return false;
@@ -140,7 +133,8 @@ export default {
       rules,
       modalForm,
       submitForm,
-      isLoading
+      isLoading,
+      categories: computed(() => store.getters['categories/categories'])
     }
   }
 }

@@ -28,7 +28,7 @@
       align="center"
       label="Категория">
       <template #default="scope">
-        <span>{{ scope.row.category }}</span>
+        <span>{{ categoryName(scope.row.category) }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -54,14 +54,30 @@
         <el-tooltip class="item" effect="light" content="Редактировать" placement="top">
           <el-button type="primary" size="medium" circle icon="el-icon-edit"></el-button>
         </el-tooltip>
+        <el-tooltip class="item" effect="light" content="Удалить" placement="top">
+          <el-button @click="remove(scope.row.id)" type="danger" size="medium" circle icon="el-icon-delete"></el-button>
+        </el-tooltip>
       </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script>
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+
 export default {
   name: 'ProductsList',
-  props: ['data']
+  props: ['data'],
+  setup() {
+    const store = useStore()
+
+    const categories = computed(() => store.getters['categories/categories'])
+
+    return {
+      remove: async id => await store.dispatch('products/removeProduct', id),
+      categoryName: type => categories.value.find(category => category.type === type).title
+    }
+  }
 }
 </script>

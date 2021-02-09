@@ -15,6 +15,10 @@ export default {
     addProduct(state, payload) {
       state.products.push(payload)
     },
+    removeProduct(state, id) {
+      const idx = state.products.findIndex(product => product[id])
+      state.products.splice(idx, 1)
+    },
     setLoadStatus(state, status) {
       state.loading = status
     }
@@ -42,13 +46,30 @@ export default {
         ElMessage({
           message: 'Позиция успешно добавлена!',
           type: 'success'
-        });
+        })
         commit('setLoadStatus', false)
       } catch (e) {
         ElMessage({
           message: error(e),
           type: 'error'
-        });
+        })
+      }
+    },
+    async removeProduct({commit}, id) {
+      try {
+        commit('setLoadStatus', true)
+        const { data } = await axiosProducts.delete(`/products/${id}`)
+        commit('removeProduct', id)
+        ElMessage({
+          message: 'Позиция успешно удалена!',
+          type: 'success'
+        })
+        commit('setLoadStatus', false)
+      } catch (e) {
+        ElMessage({
+          message: error(e),
+          type: 'error'
+        })
       }
     }
   },

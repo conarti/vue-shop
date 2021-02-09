@@ -26,7 +26,7 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import ProductsList from '@/components/admin/products/ProductsList'
-import ProductsCreateModal from '@/components/admin/products/ProductsCreateModal'
+import ProductsCreateModal from '@/components/admin/products/ProductsModal'
 
 export default {
   name: 'Products',

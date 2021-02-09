@@ -4,7 +4,7 @@
     v-model="name"
     clearable>
     <template #prepend>
-      <el-select v-loading="isLoad"  v-model="category" placeholder="Категория" clearable filterable>
+      <el-select v-loading="isLoad" v-model="category" placeholder="Категория" clearable filterable>
         <el-option v-for="item in categories" :label="item.title" :value="item.type"></el-option>
       </el-select>
     </template>

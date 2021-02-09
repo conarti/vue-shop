@@ -199,38 +199,6 @@
       "category": "berries",
       "price": 139,
       "img": "https://images.grocery.yandex.net/2783132/4e13bf22837b45b59fd4b3e611d5fedf/300x300.png"
-    },
-    {
-      "title": "test",
-      "img": "test",
-      "category": "test",
-      "price": "test",
-      "count": "test",
-      "id": 1612790289828
-    },
-    {
-      "title": "test",
-      "img": "test",
-      "category": "test",
-      "price": "test",
-      "count": "test",
-      "id": "1612790452552"
-    },
-    {
-      "title": "test",
-      "img": "test",
-      "category": "test",
-      "price": "test",
-      "count": "test",
-      "id": "1612790660738"
-    },
-    {
-      "title": "test",
-      "img": "test",
-      "category": "test",
-      "price": "test",
-      "count": "test",
-      "id": "1612790861940"
     }
   ],
   "categories": [
