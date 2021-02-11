@@ -1,11 +1,13 @@
 <template>
   <el-table
     :data="data"
-    style="width: 100%"
-    height="63vh">
+    style="width: 100%; margin-bottom: 20px;">
     <el-table-column
-      type="index"
-      width="50">
+      width="50"
+      label="№">
+      <template #default="scope">
+        <span>{{ scope.row.number }}</span>
+      </template>
     </el-table-column>
     <el-table-column
       align="center"
@@ -28,7 +30,7 @@
       align="center"
       label="Категория">
       <template #default="scope">
-        <span>{{ categoryName(scope.row.category) }}</span>
+        <span>{{ categoryTypeNames[scope.row.category] }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -51,20 +53,40 @@
       width="120"
       align="center">
       <template #default="scope">
-        <el-tooltip class="item" effect="light" content="Редактировать" placement="top">
-          <el-button type="primary" size="medium" circle icon="el-icon-edit"></el-button>
-        </el-tooltip>
+        <router-link
+          :to="{ name: 'Product', params: { id: scope.row.id } }"
+          custom
+          v-slot="{ navigate }"
+        >
+          <el-tooltip class="item" effect="light" content="Редактировать" placement="top">
+            <el-button @click="navigate" type="primary" size="medium" circle icon="el-icon-edit"></el-button>
+          </el-tooltip>
+        </router-link>
         <el-tooltip class="item" effect="light" content="Удалить" placement="top">
-          <el-button @click="remove(scope.row.id)" type="danger" size="medium" circle icon="el-icon-delete"></el-button>
+          <el-button
+            @click="confirm(scope.row.id, remove)"
+            type="danger"
+            size="medium"
+            circle
+            icon="el-icon-delete"></el-button>
         </el-tooltip>
       </template>
     </el-table-column>
   </el-table>
+
+  <AppConfirm
+    message="Вы действительно хотите удалить продукт?"
+    :visible="confirmVisible"
+    @confirm="confirmed = true"
+    @reject="confirmVisible = false"
+  />
 </template>
 
 <script>
 import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { useConfirm } from '@/use/confirm'
+import AppConfirm from '@/components/UI/modal/AppConfirm'
 
 export default {
   name: 'ProductsList',
@@ -74,10 +96,17 @@ export default {
 
     const categories = computed(() => store.getters['categories/categories'])
 
+    const categoryTypeNames = {}
+    categories.value.forEach(category => categoryTypeNames[category.type] = category.title)
+
+    const remove = async id => await store.dispatch('products/removeProduct', id)
+
     return {
-      remove: async id => await store.dispatch('products/removeProduct', id),
-      categoryName: type => categories.value.find(category => category.type === type).title
+      remove,
+      ...useConfirm(remove),
+      categoryTypeNames
     }
-  }
+  },
+  components: { AppConfirm }
 }
 </script>

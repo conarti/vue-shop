@@ -9,15 +9,10 @@
       </template>
       <div class="products-list" v-if="!isLoad && products.length">
         <ShopProduct
-          v-for="product in productsNotEmpty"
+          v-for="product in products"
           :key="product.id"
           v-bind="product"
           @update-cart-item="updateCartItem"
-        />
-        <ShopProduct
-          v-for="product in productsEmpty"
-          :key="product.id"
-          v-bind="product"
         />
       </div>
       <el-empty v-else-if="!isLoad && !products.length" description="Ничего нет"></el-empty>
@@ -56,9 +51,6 @@ export default {
         })
     )
 
-    const productsNotEmpty = computed(() => products.value.filter(product => product.count > 0))
-    const productsEmpty = computed(() => products.value.filter(product => product.count === 0))
-
     watch(filter, value => {
       if (!value.search) delete value.search
       if (!value.category) delete value.category
@@ -83,8 +75,6 @@ export default {
       isLoad: computed(() => store.getters['products/isLoading']),
       products,
       filter,
-      productsNotEmpty,
-      productsEmpty,
       updateCartItem
     }
   },

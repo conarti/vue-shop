@@ -53,12 +53,22 @@ routes = [
       {
         path: 'products',
         name: 'Products',
-        component: () => import(/* webpackChunkName: "products" */ '@/views/admin/Products')
+        component: () => import(/* webpackChunkName: "products" */ '@/views/admin/products/Products')
       },
       {
         path: 'categories',
         name: 'Categories',
-        component: () => import(/* webpackChunkName: "categories" */ '@/views/admin/Categories')
+        component: () => import(/* webpackChunkName: "categories" */ '@/views/admin/categories/Categories')
+      },
+      {
+        path: '/admin/products/:id',
+        name: 'Product',
+        component: () => import(/* webpackChunkName: "product" */ '@/views/admin/products/ProductsItem')
+      },
+      {
+        path: '/admin/categories/:id',
+        name: 'Category',
+        component: () => import(/* webpackChunkName: "category" */ '@/views/admin/categories/CategoriesItem')
       }
     ]
   },

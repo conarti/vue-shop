@@ -4,10 +4,10 @@
 
     <ul class="navbar-menu">
       <li>
-        <router-link to="products"><i class="el-icon-s-shop"></i> Продукты</router-link>
+        <router-link :to="{ name: 'Products' }"><i class="el-icon-box"></i> Продукты</router-link>
       </li>
       <li>
-        <router-link to="categories"><i class="el-icon-s-goods"></i> Категории</router-link>
+        <router-link :to="{ name: 'Categories' }"><i class="el-icon-document"></i> Категории</router-link>
       </li>
       <li>
         <a style="cursor: pointer;" @click.prevent="logout">Выйти</a>

@@ -16,11 +16,15 @@ export default {
       state.products.push(payload)
     },
     removeProduct(state, id) {
-      const idx = state.products.findIndex(product => product[id])
+      const idx = state.products.findIndex(product => product.id === id)
       state.products.splice(idx, 1)
     },
     setLoadStatus(state, status) {
       state.loading = status
+    },
+    editProduct(state, data) {
+      const idx = state.products.findIndex(item => item.id === data.id)
+      state.products[idx] = data
     }
   },
   actions: {
@@ -71,10 +75,32 @@ export default {
           type: 'error'
         })
       }
+    },
+    async editProduct({commit}, product) {
+      try {
+        commit('setLoadStatus', true)
+        const { data } = await axiosProducts.patch(`/products/${product.id}`, product)
+        commit('editProduct', product)
+        ElMessage({
+          message: 'Позиция успешно отредактирована!',
+          type: 'success'
+        })
+        commit('setLoadStatus', false)
+      } catch (e) {
+        ElMessage({
+          message: error(e),
+          type: 'error'
+        })
+      }
     }
   },
   getters: {
-    products: state => state.products,
+    products: state => {
+      return [
+        ...state.products.filter(item => item.count > 0),
+        ...state.products.filter(item => item.count === 0)
+      ]
+    },
     isLoading: state => state.loading
   }
 }
