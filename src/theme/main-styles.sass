@@ -34,6 +34,9 @@ body
   transition: color .25s, background-color .25s
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif
 
+body.modal
+  overflow: hidden
+
 .container
   height: 100vh
   margin: 0 auto
@@ -44,11 +47,6 @@ body
   margin-top: 70px
 
 .card
-  overflow: hidden
-  padding: 1rem
-  margin-bottom: 1rem
-  border-radius: 5px
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
   background: var(--color__body--accent)
 
 .vertical-center

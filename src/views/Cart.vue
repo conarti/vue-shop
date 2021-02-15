@@ -1,78 +1,106 @@
 <template>
-  <el-card v-loading="isLoad" :style="isLoad ? 'height: 50vh' : ''">
+  <el-card
+    v-loading="isLoad"
+    :style="isLoad ? 'height: 50vh' : ''"
+  >
     <template #header v-if="!isLoad">
       <h2 class="card-title">Корзина</h2>
     </template>
 
-    <el-empty v-if="!tableItems.length && !isLoad" description="В корзине пока ничего нет"></el-empty>
-    <template v-else-if="tableItems.length && !isLoad">
-      <AppCartTable
-        :table-items="tableItems"
+    <template v-if="cartItems.length && !isLoad">
+      <CartList
+        :products="cartItems"
         @count-change="updateCartItem"
       />
 
-      <p class="text-right mb-10"><strong>Всего: {{ endSum }} руб.</strong></p>
+      <p class="text-right mb-10">
+        <strong>Всего: {{ endSum }} руб.</strong>
+      </p>
 
       <div class="flex-end">
         <el-button
           type="primary"
-        >Оплатить</el-button>
+          @click="pay"
+        >Оформить заказ</el-button>
       </div>
     </template>
+
+    <ElEmpty
+      v-else-if="!cartItems.length && !isLoad"
+      description="В корзине пока ничего нет"
+    />
   </el-card>
+
+  <CartAuthModal
+    :visible="authModal"
+    @close="authModal = false"
+    @logged-in="authModal = false; pay()"
+  />
 </template>
 
 <script>
-import AppCartTable from '@/components/CartList'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import { computed, onMounted, reactive } from 'vue'
 import { sum } from '@/utils/formatter'
-
-// id: count
-const CART_MODEL = {
-  '2': 3,
-  '8': 23,
-  '7': 38,
-  '6': 5,
-  '5': 1
-}
+import CartList from '@/components/CartList'
+import CartAuthModal from '@/components/CartAuthModal'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 export default {
+  name: 'Cart',
+  components: { CartList, CartAuthModal },
   setup() {
+    document.title = 'Ю.Лавка | Корзина'
+
     const store = useStore()
+    const router = useRouter()
 
     const products = computed(() => store.getters['products/products'])
-    const cartData = reactive(CART_MODEL)
+    const cart = computed(() => store.getters['cart/products'])
 
-    const tableItems = computed(() => {
-      return Object.keys(cartData)
+    const cartItems = computed(() => {
+      return Object.keys(cart.value)
         .map(id => {
           return {
             ...products.value.find(item => item.id === id),
-            cartCount: cartData[id]
+            cartCount: cart.value[id]
           }
         })
     })
 
+    const updateCartItem = (id, count) => {
+      store.commit('cart/update', { id, count })
+    }
+
     const endSum = computed(() => {
-      return sum(tableItems.value.reduce((total, item) => total + item.cartCount * item.price, 0))
+      return sum(cartItems.value.reduce((total, item) => total + item.cartCount * item.price, 0))
     })
 
-    const updateCartItem = (count, id) => {
-      if (!count) {
-        delete cartData[id]
+    const authModal = ref(false)
+    const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
+
+    const pay = async () => {
+      if (isAuthenticated.value) {
+        try {
+          //TODO: at this moment pay-plugin will open
+          await store.dispatch('order/addOrder')
+          router.push('/')
+          // create order + calc products from store (count)
+        } catch (e) {}
       } else {
-        cartData[id] = count
+        authModal.value = true
       }
     }
 
     return {
-      tableItems,
+      cartItems,
       endSum,
       updateCartItem,
-      isLoad: computed(() => store.getters['products/isLoading'])
+      isLoad: computed(() => store.getters['products/isLoading']),
+      authModal,
+      pay
     }
-  },
-  components: { AppCartTable }
+  }
 }
 </script>

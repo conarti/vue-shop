@@ -50,25 +50,36 @@ routes = [
     },
     component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin'),
     children: [
+      //FIXME Исправить name
       {
         path: 'products',
         name: 'Products',
-        component: () => import(/* webpackChunkName: "products" */ '@/views/admin/products/Products')
+        component: () => import(/* webpackChunkName: "products" */ '@/views/AdminProducts')
       },
       {
         path: 'categories',
         name: 'Categories',
-        component: () => import(/* webpackChunkName: "categories" */ '@/views/admin/categories/Categories')
+        component: () => import(/* webpackChunkName: "categories" */ '@/views/AdminCategories')
+      },
+      {
+        path: 'orders',
+        name: 'AdminOrders',
+        component: () => import(/* webpackChunkName: "products" */ '@/views/AdminOrders')
       },
       {
         path: '/admin/products/:id',
-        name: 'Product',
-        component: () => import(/* webpackChunkName: "product" */ '@/views/admin/products/ProductsItem')
+        name: 'AdminProduct',
+        component: () => import(/* webpackChunkName: "product" */ '@/views/AdminProduct')
       },
       {
         path: '/admin/categories/:id',
         name: 'Category',
-        component: () => import(/* webpackChunkName: "category" */ '@/views/admin/categories/CategoriesItem')
+        component: () => import(/* webpackChunkName: "category" */ '@/views/AdminCategory')
+      },
+      {
+        path: '/admin/orders/:id',
+        name: 'AdminOrder',
+        component: () => import(/* webpackChunkName: "category" */ '@/views/AdminOrder')
       }
     ]
   },
@@ -83,16 +94,30 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   linkActiveClass: 'active',
-  linkExactActiveClass: 'active'
+  linkExactActiveClass: 'active',
+  scrollBehavior(to, from, savedProsition) {
+    if (to.name === 'Products' && from.name === 'Products') {
+      return savedProsition
+    } else if (from.name === 'Product' && to.name === 'Product') {
+      return {
+        top: 0,
+        behavior: 'smooth'
+      }
+    } else {
+      return {
+        top: 0
+      }
+    }
+  }
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach( (to, from, next) => {
   const requireAuth = to.meta.auth
 
   if (requireAuth && store.getters['auth/isAuthenticated']) {
     next()
   } else if (requireAuth && !store.getters['auth/isAuthenticated']) {
-    next('/auth?message=auth')
+    next('/auth?message=access-denied')
   } else if (store.getters['auth/isAuthenticated'] && to.meta.layout === 'auth') {
     next('/admin?message=auth-exists')
   } else {

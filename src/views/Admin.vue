@@ -9,6 +9,8 @@ import { ElNotification } from 'element-plus'
 export default {
   name: 'Admin',
   setup() {
+    document.title = 'Ю.Лавка | Админ'
+
     const route = useRoute()
     if (route.query?.message === 'auth-exists') {
       ElNotification({

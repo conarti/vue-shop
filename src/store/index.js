@@ -1,7 +1,9 @@
 import { createStore, createLogger } from 'vuex'
-import products from './modules/products.module'
-import categories from './modules/categories.module'
-import auth from './modules/auth.module'
+import products from './products.module'
+import categories from './categories.module'
+import auth from './auth.module'
+import cart from './cart.module'
+import order from './order.module'
 
 export default createStore({
   state() {
@@ -11,7 +13,11 @@ export default createStore({
   actions: {
   },
   modules: {
-    products, auth, categories
+    products,
+    auth,
+    categories,
+    cart,
+    order
   },
   // plugins: [createLogger()]
 })

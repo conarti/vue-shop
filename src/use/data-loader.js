@@ -9,4 +9,7 @@ export async function useDataLoader() {
   if (!store.getters['products/products'].length) {
     await store.dispatch('products/getProductsFromServer')
   }
+  // if(!store.getters['auth/users'].length) {
+  //   await store.dispatch('auth/getUsers')
+  // }
 }

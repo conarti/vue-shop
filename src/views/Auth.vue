@@ -1,22 +1,42 @@
 <template>
   <el-card>
     <template #header>
-      <h1>Войти</h1>
+      <h1>Войти ( a@a.ru : qwerty )</h1>
     </template>
-    <el-form :model="form" ref="loginForm" :rules="rules" status-icon label-width="50px" label-position="left">
+    <el-form
+      :model="form"
+      ref="loginForm"
+      :rules="rules"
+      status-icon
+      label-width="50px"
+      label-position="left"
+    >
       <el-form-item
         label="Email"
         prop="email">
-        <el-input v-model="form.email" placeholder="Введите почту" prefix-icon="el-icon-user-solid"></el-input>
+        <el-input
+          v-model="form.email"
+          placeholder="Введите почту"
+          prefix-icon="el-icon-user-solid"
+        ></el-input>
       </el-form-item>
+
       <el-form-item
         label="Pass"
         prop="password">
-        <el-input v-model="form.password" placeholder="Введите пароль" show-password></el-input>
+        <el-input
+          v-model="form.password"
+          placeholder="Введите пароль"
+          show-password
+        ></el-input>
       </el-form-item>
+
       <el-form-item label-width="auto">
-        <el-row type="flex" justify="end">
-          <el-col :span="6">
+        <el-row
+          type="flex"
+          justify="end"
+        >
+          <el-col :span="0">
             <el-button
               style="width: 100%"
               type="primary"
@@ -31,70 +51,43 @@
 </template>
 
 <script>
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
-import { reactive, ref } from 'vue'
+import { useLoginForm } from '@/use/login-form'
 
 export default {
   setup() {
-    const router = useRouter()
-    const store = useStore()
-    const route = useRoute()
+    document.title = 'Ю.Лавка | Авторизация'
 
-    if (route.query?.message === 'auth') {
+    const route = useRoute()
+    const loginForm = useLoginForm('/admin')
+
+    const message = computed(() => route.query?.message)
+
+    if (message.value === 'access-denied') {
       ElNotification({
         title: 'Доступ к странице блокирован',
-        message: 'Необходимо войти в аккаунт',
+        message: 'Необходимо войти в аккаунт с доступом',
         type: 'warning'
       })
     }
 
-    const loginForm = ref(null)
-
-    const form = reactive({
-      email: '',
-      password: ''
-    })
-
-    const submitForm = () => {
-      loginForm.value.validate(async valid => {
-        if (valid) {
-          try {
-            await store.dispatch('auth/login', { ...form })
-            router.push('/admin')
-          } catch (e) {}
-        } else {
-          return false;
-        }
-      })
-    }
-
-    const validatePass = (_, value, callback) => {
-      const regexp = /[а-яё]/i;
-      if (regexp.test(value)) {
-        callback(new Error('Пароль не может содержать кириллицу'))
-      } else {
-        callback()
-      }
-    }
-
-    const rules = {
-      email: [
-        { type: 'email', required: true, message: 'Пожалуйста, введите корректную почту', trigger: 'blur' },
-      ],
-      password: [
-        { required: true, message: 'Пожалуйста, введите пароль', trigger: 'blur' },
-        { validator: validatePass, trigger: ['change', 'blur'] },
-        { min: 6, message: 'Длина пароля не менее 6 символов', trigger: ['change', 'blur'] }
-      ]
-    }
+    // function checkUser() {
+    //   const role = store.getters['auth/role']
+    //   if (role !== 'admin') {
+    //     ElNotification({
+    //       title: 'Доступ к странице блокирован',
+    //       message: 'У этого аккаунта нету доступа',
+    //       type: 'warning'
+    //     })
+    //   } else {
+    //     router.push('/admin')
+    //   }
+    // }
 
     return {
-      form,
-      loginForm,
-      submitForm,
-      rules
+      ...loginForm
     }
   }
 }
