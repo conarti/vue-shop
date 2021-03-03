@@ -13,12 +13,12 @@ export default {
     return {
       users: [],
       localId: localStorage.getItem(ID_KEY),
-      token: '',
-      role: 'guest',
-      name: ''
-      // для отладки
-      // token: localStorage.getItem(TOKEN_KEY),
-      // role: 'admin',
+      name: '',
+      // token: '',
+      // role: 'guest',
+      // для отладки (всегда админка, авторизация не слетает)
+      token: localStorage.getItem(TOKEN_KEY),
+      role: 'admin',
     }
   },
   getters: {

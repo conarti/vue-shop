@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="!isLoading"
+    v-loading.fullscreen.lock="isLoading"
     class="card product-card product-page"
   >
     <el-breadcrumb
@@ -60,7 +61,7 @@
   </div>
 
   <div
-    v-if="!isLoading && categoryProducts.length"
+    v-if="categoryProducts.length"
     class="product-card product-card--recs"
   >
     <h1 class="product-card__title product-card__title--recommended">
@@ -74,12 +75,9 @@
 <script>
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { sum } from '@/utils/formatter'
 import ProductRecommends from '@/components/ProductRecommends'
-
-//FIXME Иногда вылазит ошибка при перезагрузке
-//(когда дата с сервера не успевает подгружаться, но почему? await в mounted в App)
 
 export default {
   name: 'Product',
@@ -90,17 +88,17 @@ export default {
     const products = computed(() => store.getters['products/products'])
     const categories = computed(() => store.getters['categories/categories'])
     const cart = computed(() => store.getters['cart/products'])
+    const isLoading = ref(false)
 
     const id = computed(() => route.params.id)
 
-    const currentProduct = computed(
-      () => ({
-        ...products.value.find(product => product.id === id.value),
-        cartCount: cart.value[id.value] ? cart.value[id.value] : 0
-      })
-    )
+    const currentProduct = computed(() => {
+      return products.value.find(product => product.id === id.value)
+    })
 
-    const inputCount = ref(currentProduct.value.cartCount)
+    const cartCount = computed(() => cart.value[id.value] ? cart.value[id.value] : 0)
+
+    const inputCount = ref(cartCount.value)
 
     const currentCategoryName = computed(
       () => categories.value
@@ -128,12 +126,13 @@ export default {
 
     return {
       currentProduct,
-      isLoading: computed(() => store.getters['products/isLoading']),
+      isLoading,
       sum,
       currentCategoryName,
       inputCount,
       updateCartProduct,
-      categoryProducts
+      categoryProducts,
+      products
     }
   }
 }
