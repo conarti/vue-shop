@@ -6,6 +6,7 @@ import { toLocalFormatData } from '@/utils/data'
 
 const TOKEN_KEY = 'jwt-token'
 const ID_KEY = 'localId'
+const NAME = 'name'
 
 export default {
   namespaced: true,
@@ -13,12 +14,9 @@ export default {
     return {
       users: [],
       localId: localStorage.getItem(ID_KEY),
-      name: '',
-      // token: '',
-      // role: 'guest',
-      // для отладки (всегда админка, авторизация не слетает)
-      token: localStorage.getItem(TOKEN_KEY),
-      role: 'admin',
+      name: localStorage.getItem(NAME),
+      role: 'guest',
+      token: localStorage.getItem(TOKEN_KEY) ?? '',
     }
   },
   getters: {
@@ -51,6 +49,7 @@ export default {
     },
     setName (state, name) {
       state.name = name
+      localStorage.setItem(NAME, name)
     },
     addUser (state, user) {
       state.users.push(user)
@@ -112,6 +111,7 @@ export default {
           }
         }
       } catch (e) {
+        console.log(e)
         ElNotification.error({
           title: 'Ошибка получения данных пользователей',
           message: error(e.response.data.error.message),

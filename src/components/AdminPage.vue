@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading" >
     <template #header>
       <el-row
         type="flex"
@@ -24,6 +24,12 @@
 <script>
 export default {
   name: 'AdminPage',
-  props: { title: String }
+  props: {
+    title: String,
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>

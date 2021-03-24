@@ -1,9 +1,9 @@
 <template>
   <admin-page
     title="Список заказов"
-    v-loading="isLoad"
+    :loading="loading"
   >
-    <template v-if="orders.length">
+    <template v-if="orders.length && !loading">
       <el-table
         :data="orders"
         style="width: 100%; margin-bottom: 20px;">
@@ -75,11 +75,11 @@
       </el-table>
     </template>
 
-    <ElEmpty v-if="orders.length === 0" description="Заказов пока нет" />
+    <ElEmpty v-if="!loading && orders.length === 0" description="Заказов пока нет" />
   </admin-page>
 </template>
 <script>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import AdminPage from '@/components/AdminPage'
 
@@ -89,13 +89,20 @@ export default {
   setup() {
     const store = useStore()
     const orders = computed(() => store.getters['order/orders'])
+    const loading = computed(() => store.getters['order/isLoading'])
+
+    onMounted(async () => {
+      await store.dispatch('order/getOrders')
+    })
+
+    watch(loading, value => console.log(value))
 
     const users = computed(() => store.getters['auth/users'])
     const getUserName = userId => users.value.find(user => user.id === userId).name
 
     return {
       orders,
-      isLoad: computed(() => store.getters['order/isLoading']),
+      loading,
       getUserName
     }
   }
